@@ -6,20 +6,23 @@ public class GeneralController : MonoBehaviour
 {
     public GameObject   puckObj;
     public GameObject   enemyObj;
+    public GameObject   arrow;
+
     public GameObject[] blocksObj;
 
-    public float m_Thrust;
 
     public bool shoot;
+    public bool isMouseDown;
+
     public Vector3 initImpulse;
 
-    public bool isMouseDown;
     public Vector3 currentPosition;
     public Transform center;
     public Transform idlePosition;
 
     public float maxLength;
     public float bottomBoundary;
+    public float puckSpeed;
 
     private void Start()
     {
@@ -30,11 +33,7 @@ public class GeneralController : MonoBehaviour
     
     private void Update()
     {
-        // enemyObj.transform.position.x = new Vector3(enemyObj.transform.position.x, enemyObj.transform.position.y, enemyObj.transform.position.z);
-        if (shoot == false)
-        {
-           // inputFinger();
-        }
+        
 
         slightShootHandler();
     }
@@ -43,13 +42,19 @@ public class GeneralController : MonoBehaviour
     {
         if (isMouseDown)
         {
+            arrow.SetActive(true);
+            arrow.transform.eulerAngles = Input.mousePosition;
+           // arrow.transform.eulerAngles = new Vector3(90, arrow.transform.eulerAngles.y, arrow.transform.eulerAngles.z);
+
             Vector3 mousePosition = Input.mousePosition;
             mousePosition.z = 10;
 
             currentPosition = Camera.main.ScreenToWorldPoint(mousePosition);
             currentPosition = center.position - Vector3.ClampMagnitude(currentPosition - center.position, maxLength);
 
-            currentPosition = ClampBoundary(currentPosition);
+          //  arrow.transform.eulerAngles = Vector3.ClampMagnitude(currentPosition, 10);
+
+           currentPosition = ClampBoundary(currentPosition);
         }
     }
 
@@ -62,13 +67,14 @@ public class GeneralController : MonoBehaviour
     {
         isMouseDown = false;
 
+        arrow.SetActive(false);
         inputFinger();
         currentPosition = idlePosition.position;
     }
 
     Vector3 ClampBoundary(Vector3 vector)
     {
-        vector.y = Mathf.Clamp(vector.y, bottomBoundary, 1000);
+     //   vector.y = Mathf.Clamp(vector.y, bottomBoundary, 1000);
         return vector;
     }
 
@@ -76,11 +82,9 @@ public class GeneralController : MonoBehaviour
     void inputFinger()
     {
         if(Input.GetMouseButtonUp(0))
-        {
-            //initImpulse = new Vector3(4, 0, 10);
-            initImpulse = new Vector3(currentPosition.x, 0, 10);
+        {           
+            initImpulse = new Vector3(currentPosition.x, 0, puckSpeed);
             puckObj.GetComponent<Rigidbody>().AddForce(initImpulse, ForceMode.Impulse);
-            initImpulse = initImpulse;
             shoot = true;
         }
     }
