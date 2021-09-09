@@ -23,12 +23,17 @@ public class GeneralController : MonoBehaviour
     public float maxLength;
     public float bottomBoundary;
     public float puckSpeed;
+    public float enemySpeed;
 
     private void Start()
     {
-       
+        
 
-     
+        UiController.instance.startGameButton.onClick.AddListener(()    => UiController.instance.StartGameHandler());
+        UiController.instance.exitGameButton.onClick.AddListener(()     => UiController.instance.ExitGameHandler());
+        UiController.instance.menuGameButton.onClick.AddListener(()     => UiController.instance.pauseMenuHandler());
+        UiController.instance.resumeGameButton.onClick.AddListener(()   => UiController.instance.ResumeGameHandler());
+        UiController.instance.exit2GameButton.onClick.AddListener(()    => UiController.instance.ExitGameHandler());
     }
     
     private void Update()
@@ -36,6 +41,9 @@ public class GeneralController : MonoBehaviour
         
 
         slightShootHandler();
+
+        EnemyAi();
+        GameStateController();
     }
 
     void slightShootHandler()
@@ -74,7 +82,7 @@ public class GeneralController : MonoBehaviour
 
     Vector3 ClampBoundary(Vector3 vector)
     {
-     //   vector.y = Mathf.Clamp(vector.y, bottomBoundary, 1000);
+        vector.y = Mathf.Clamp(vector.y, bottomBoundary, 1000);
         return vector;
     }
 
@@ -89,5 +97,28 @@ public class GeneralController : MonoBehaviour
         }
     }
 
+    void EnemyAi()
+    {
+        float step = enemySpeed * Time.deltaTime;
+        enemyObj.transform.position = Vector3.MoveTowards(new Vector3(enemyObj.transform.position.x, -2.15f, 11.87f), puckObj.transform.position, step);
+    }
 
+    void GameStateController()
+    {
+        if (puckObj.activeInHierarchy == false)
+        {
+            puckObj.SetActive(true);
+        }
+
+        if (blocksObj[0].activeInHierarchy == false && blocksObj[1].activeInHierarchy == false  && blocksObj[2].activeInHierarchy == false)
+        {
+            enemySpeed++;
+            UiController.instance.levelScore.text = "Level " + enemySpeed;
+            for (int i = 0; i < blocksObj.Length; i++)
+            {
+                blocksObj[i].SetActive(true);
+            }
+            
+        }
+    }
 }
