@@ -11,6 +11,7 @@ public class TouchController : MonoBehaviour
             gameObject.SetActive(false);
             gameObject.transform.position = new Vector3(0.14f, -2.5f, -1.579f);
             gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+            GeneralController.instance.GetComponent<BoxCollider>().enabled = true;
         }
         if (collision.gameObject.tag == "Block")
         {
@@ -18,6 +19,7 @@ public class TouchController : MonoBehaviour
             collision.gameObject.SetActive(false);
             gameObject.transform.position = new Vector3(0.14f, -2.5f, -1.579f);
             gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
+            GeneralController.instance.GetComponent<BoxCollider>().enabled = true;
         }
     }
 }

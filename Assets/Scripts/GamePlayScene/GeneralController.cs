@@ -4,31 +4,38 @@ using UnityEngine;
 
 public class GeneralController : MonoBehaviour
 {
+    public static GeneralController instance { get; private set; }
+
     public GameObject   puckObj;
-    public GameObject   enemyObj;
     public GameObject   arrow;
 
     public GameObject[] blocksObj;
 
-
     public bool shoot;
-    public bool isMouseDown;
+    public bool isMouseDown;                //Bool - for detect when mouse button down
 
-    public Vector3 initImpulse;
+    public Vector3 initImpulse;             //Vector3 - impulse rigidbody puck
 
     public Vector3 currentPosition;
+    public Vector3 currentPosition2;
     public Transform center;
     public Transform idlePosition;
 
     public float maxLength;
     public float bottomBoundary;
     public float puckSpeed;
-    public float enemySpeed;
+
+    public float xValue;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
         
-
+        //buttons onClick Handlers
         UiController.instance.startGameButton.onClick.AddListener(()    => UiController.instance.StartGameHandler());
         UiController.instance.exitGameButton.onClick.AddListener(()     => UiController.instance.ExitGameHandler());
         UiController.instance.menuGameButton.onClick.AddListener(()     => UiController.instance.pauseMenuHandler());
@@ -39,11 +46,14 @@ public class GeneralController : MonoBehaviour
     private void Update()
     {
         
-
         slightShootHandler();
 
-        EnemyAi();
+        EnemyController.instance.EnemyAi();
         GameStateController();
+
+   
+        
+
     }
 
     void slightShootHandler()
@@ -51,18 +61,24 @@ public class GeneralController : MonoBehaviour
         if (isMouseDown)
         {
             arrow.SetActive(true);
-            arrow.transform.eulerAngles = Input.mousePosition;
+            
            // arrow.transform.eulerAngles = new Vector3(90, arrow.transform.eulerAngles.y, arrow.transform.eulerAngles.z);
 
             Vector3 mousePosition = Input.mousePosition;
-            mousePosition.z = 10;
+            mousePosition.z = 20;
+            
 
             currentPosition = Camera.main.ScreenToWorldPoint(mousePosition);
             currentPosition = center.position - Vector3.ClampMagnitude(currentPosition - center.position, maxLength);
+            currentPosition = new Vector3(currentPosition.x * 4, currentPosition.y, currentPosition.z * 2);
 
-          //  arrow.transform.eulerAngles = Vector3.ClampMagnitude(currentPosition, 10);
+            //arrow rotation
+            Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
+            Vector3 dir = Input.mousePosition - pos;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            arrow.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            arrow.transform.eulerAngles = new Vector3(90, arrow.transform.eulerAngles.y, arrow.transform.eulerAngles.z);
 
-           currentPosition = ClampBoundary(currentPosition);
         }
     }
 
@@ -78,6 +94,7 @@ public class GeneralController : MonoBehaviour
         arrow.SetActive(false);
         inputFinger();
         currentPosition = idlePosition.position;
+        gameObject.GetComponent<BoxCollider>().enabled = false;
     }
 
     Vector3 ClampBoundary(Vector3 vector)
@@ -91,17 +108,13 @@ public class GeneralController : MonoBehaviour
     {
         if(Input.GetMouseButtonUp(0))
         {           
-            initImpulse = new Vector3(currentPosition.x, 0, puckSpeed);
+            initImpulse = new Vector3(currentPosition.x, 0, currentPosition.z);
             puckObj.GetComponent<Rigidbody>().AddForce(initImpulse, ForceMode.Impulse);
             shoot = true;
         }
     }
 
-    void EnemyAi()
-    {
-        float step = enemySpeed * Time.deltaTime;
-        enemyObj.transform.position = Vector3.MoveTowards(new Vector3(enemyObj.transform.position.x, -2.15f, 11.87f), puckObj.transform.position, step);
-    }
+   
 
     void GameStateController()
     {
@@ -112,8 +125,8 @@ public class GeneralController : MonoBehaviour
 
         if (blocksObj[0].activeInHierarchy == false && blocksObj[1].activeInHierarchy == false  && blocksObj[2].activeInHierarchy == false)
         {
-            enemySpeed++;
-            UiController.instance.levelScore.text = "Level " + enemySpeed;
+            EnemyController.instance.enemySpeed++;
+            UiController.instance.levelScore.text = "Level " + EnemyController.instance.enemySpeed;
             for (int i = 0; i < blocksObj.Length; i++)
             {
                 blocksObj[i].SetActive(true);

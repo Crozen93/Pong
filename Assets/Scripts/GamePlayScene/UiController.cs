@@ -19,6 +19,8 @@ public class UiController : MonoBehaviour
     [Header("Panels")]
     public GameObject menuPanel;
     public GameObject pausePanel;
+    [Header("Image")]
+    public GameObject LevelImage;
 
     private void Awake()
     {
@@ -30,6 +32,7 @@ public class UiController : MonoBehaviour
     {
         menuPanel.SetActive(false);
         menuGameButton.gameObject.SetActive(true);
+        LevelImage.SetActive(true);
     }
 
     public void ExitGameHandler()
