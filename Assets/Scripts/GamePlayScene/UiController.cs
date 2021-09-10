@@ -18,8 +18,7 @@ public class UiController : MonoBehaviour
     public Button menuGameButton;
     [Header("Panels")]
     public GameObject menuPanel;
-    public GameObject pausePanel;
-    [Header("Image")]
+    public GameObject pausePanel;   
     public GameObject LevelImage;
 
     private void Awake()

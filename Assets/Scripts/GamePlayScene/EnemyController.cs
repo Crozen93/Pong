@@ -6,7 +6,7 @@ public class EnemyController : MonoBehaviour
 {
     public static EnemyController instance { get; private set; }
     [SerializeField] private GameObject enemyObj;
-    public float enemySpeed;
+    public float enemySpeed;                        //enemy speed
 
     private void Awake()
     {
