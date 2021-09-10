@@ -5,7 +5,7 @@
 ---
 #### Скриншот 1: 
 ![Альтернативный текст](https://github.com/Crozen93/TestTaskPong/blob/master/Img/1.jpg)
-#### Скриншот 1: 
+#### Скриншот 2: 
 ![Альтернативный текст](https://github.com/Crozen93/TestTaskPong/blob/master/Img/2.jpg)
-#### Скриншот 1: 
+#### Скриншот 3: 
 ![Альтернативный текст](https://github.com/Crozen93/TestTaskPong/blob/master/Img/3.jpg)
