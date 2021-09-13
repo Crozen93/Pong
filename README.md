@@ -1,4 +1,4 @@
-# Test Task Pong - Unity3d
+# Pong - Unity3d
 ---
 ## [Build](https://github.com/Crozen93/TestTaskPong/blob/master/Build/buildpong.apk "Android Build")
 ## [Gameplay Video](https://github.com/Crozen93/TestTaskPong/blob/master/Game%20play%20video/Screenrecorder-1.mp4 "Android Video")
